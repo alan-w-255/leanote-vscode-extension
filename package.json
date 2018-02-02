@@ -11,14 +11,18 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:extension.sayHello",
+        "onCommand:leanote.createNewNote"
     ],
     "main": "./out/extension",
     "contributes": {
-        "commands": [
-            {
+        "commands": [{
                 "command": "extension.sayHello",
                 "title": "Hello World"
+            },
+            {
+                "command": "leanote.createNewNote",
+                "title": "leanote: create new note"
             }
         ]
     },

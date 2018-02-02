@@ -2,6 +2,9 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { commands, TextEdit, Selection } from 'vscode';
+
+
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -21,7 +24,29 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage('Hello World!');
     });
 
-    context.subscriptions.push(disposable);
+    // 注册创建笔记命令
+    let createNewNoteCommand = vscode.commands.registerCommand('leanote.createNewNote', () => {
+        vscode.workspace.openTextDocument({
+            language: 'markdown'
+        })
+        .then((textDocument) => {
+            vscode.window.showTextDocument(textDocument, vscode.ViewColumn.Active,false)
+            .then((textEditor) => {
+                const titlePos = new vscode.Position(1, 7)
+                textEditor.edit(editBuilder => {
+                    editBuilder.insert(new vscode.Position(0, 0), '---\ntitle: \ntags: \nnotebook: \n---\n')
+                })
+                    textEditor.selection = new vscode.Selection(titlePos, titlePos)
+            })
+            }, (reason) => {
+                vscode.window.showErrorMessage('创建新笔记失败');
+                console.log(reason);
+        })
+    })
+
+    context.subscriptions.push(
+        createNewNoteCommand
+    );
 }
 
 // this method is called when your extension is deactivated
